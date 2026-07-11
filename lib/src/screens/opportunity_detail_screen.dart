@@ -41,6 +41,8 @@ class OpportunityDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final daysAgo = DateTime.now().difference(opportunity.postedAt).inDays;
+    final authState = ref.watch(authStateProvider).asData?.value;
+    final userProfile = ref.watch(userProfileProvider).asData?.value;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F6FA),
@@ -89,8 +91,18 @@ class OpportunityDetailScreen extends ConsumerWidget {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(56), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-                    onPressed: () => _submitApplication(context, ref),
-                    child: const Text('Apply now', style: TextStyle(fontSize: 16)),
+                    onPressed: () {
+                      final isSignedIn = authState != null && userProfile != null;
+                      if (!isSignedIn) {
+                        Navigator.pushNamed(context, '/sign-in');
+                        return;
+                      }
+                      _submitApplication(context, ref);
+                    },
+                    child: Text(
+                      authState == null || userProfile == null ? 'Sign in to apply' : 'Apply now',
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ),
                 ],
               ),

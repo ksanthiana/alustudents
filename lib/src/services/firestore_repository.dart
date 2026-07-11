@@ -18,13 +18,30 @@ class FirestoreRepository {
     });
   }
 
-  Stream<List<Opportunity>> opportunityStream({String? searchTerm, String? category}) {
+  Stream<List<Opportunity>> opportunityStream({
+    String? searchTerm,
+    String? locationQuery,
+    bool remoteOnly = false,
+    String? category,
+  }) {
     final query = firestore.collection('opportunities').orderBy('postedAt', descending: true);
     return query.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => Opportunity.fromMap(doc.id, doc.data())).where((opportunity) {
-        final matchesSearch = searchTerm == null || searchTerm.isEmpty || opportunity.title.toLowerCase().contains(searchTerm.toLowerCase()) || opportunity.organization.toLowerCase().contains(searchTerm.toLowerCase());
+      final opportunities = snapshot.docs.map((doc) => Opportunity.fromMap(doc.id, doc.data()));
+      return opportunities.where((opportunity) {
+        final lowerSearch = searchTerm?.toLowerCase() ?? '';
+        final lowerLocation = locationQuery?.toLowerCase() ?? '';
+        final matchesSearch = lowerSearch.isEmpty ||
+            opportunity.title.toLowerCase().contains(lowerSearch) ||
+            opportunity.organization.toLowerCase().contains(lowerSearch) ||
+            opportunity.description.toLowerCase().contains(lowerSearch);
         final matchesCategory = category == null || category.isEmpty || opportunity.tags.contains(category);
-        return matchesSearch && matchesCategory;
+        final matchesLocation = lowerLocation.isEmpty ||
+            opportunity.location.toLowerCase().contains(lowerLocation) ||
+            opportunity.tags.any((tag) => tag.toLowerCase().contains(lowerLocation));
+        final matchesRemote = !remoteOnly ||
+            opportunity.location.toLowerCase() == 'remote' ||
+            opportunity.tags.any((tag) => tag.toLowerCase() == 'remote');
+        return matchesSearch && matchesCategory && matchesLocation && matchesRemote;
       }).toList();
     });
   }

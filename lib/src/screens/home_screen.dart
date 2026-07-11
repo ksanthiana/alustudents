@@ -19,7 +19,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final locationController = TextEditingController();
-  bool remoteOnly = false;
 
   @override
   void dispose() {
@@ -32,6 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final opportunitiesAsync = ref.watch(opportunityListProvider);
     final userProfileAsync = ref.watch(userProfileProvider);
     final category = ref.watch(selectedCategoryProvider);
+    final remoteOnly = ref.watch(remoteOnlyProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F6FA),
@@ -140,7 +140,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               scale: 0.9,
                               child: Switch(
                                 value: remoteOnly,
-                                onChanged: (value) => setState(() => remoteOnly = value),
+                                onChanged: (value) => ref.read(remoteOnlyProvider.notifier).state = value,
                               ),
                             ),
                             const Text('Remote', style: TextStyle(fontSize: 13, color: Color(0xFF334155))),
@@ -158,12 +158,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       _CategoryChip(label: 'Engineering', selected: category == 'Engineering', onSelected: (selected) => ref.read(selectedCategoryProvider.notifier).state = selected ? 'Engineering' : null),
                       _CategoryChip(label: 'Marketing', selected: category == 'Marketing', onSelected: (selected) => ref.read(selectedCategoryProvider.notifier).state = selected ? 'Marketing' : null),
                       _CategoryChip(label: 'Data', selected: category == 'Data', onSelected: (selected) => ref.read(selectedCategoryProvider.notifier).state = selected ? 'Data' : null),
-                      _CategoryChip(label: 'Fellowships', selected: false, onSelected: (_) {}),
+                      _CategoryChip(label: 'Fellowships', selected: category == 'Fellowships', onSelected: (selected) => ref.read(selectedCategoryProvider.notifier).state = selected ? 'Fellowships' : null),
                     ],
                   ),
                   const SizedBox(height: 18),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => FocusScope.of(context).unfocus(),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(52),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -234,14 +234,16 @@ class _CategoryChip extends StatelessWidget {
   }
 }
 
-class OpportunityCard extends StatelessWidget {
+class OpportunityCard extends ConsumerWidget {
   final Opportunity opportunity;
 
   const OpportunityCard({super.key, required this.opportunity});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final postedDays = DateTime.now().difference(opportunity.postedAt).inDays;
+    final authState = ref.watch(authStateProvider);
+
     return InkWell(
       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => OpportunityDetailScreen(opportunity: opportunity))),
       borderRadius: BorderRadius.circular(24),
@@ -292,7 +294,28 @@ class OpportunityCard extends StatelessWidget {
                 const Icon(Icons.location_on_outlined, size: 16, color: Color(0xFF64748B)),
                 const SizedBox(width: 6),
                 Expanded(child: Text(opportunity.location, style: const TextStyle(color: Color(0xFF64748B)))),
-                Text('Posted ${postedDays}d ago', style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                Expanded(
+                  child: Text('Posted ${postedDays}d ago', style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(100, 40),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  ),
+                  onPressed: () {
+                    if (authState.asData?.value == null) {
+                      Navigator.pushNamed(context, '/sign-in');
+                      return;
+                    }
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => OpportunityDetailScreen(opportunity: opportunity)));
+                  },
+                  child: Text(authState.asData?.value == null ? 'Sign in' : 'Apply', style: const TextStyle(fontSize: 14)),
+                ),
               ],
             ),
           ],

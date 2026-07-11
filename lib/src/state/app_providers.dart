@@ -37,14 +37,23 @@ final userProfileProvider = StreamProvider<UserProfile?>((ref) {
 });
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
+final locationQueryProvider = StateProvider<String>((ref) => '');
+final remoteOnlyProvider = StateProvider<bool>((ref) => false);
 final selectedCategoryProvider = StateProvider<String?>((ref) => null);
 
 final opportunityListProvider = StreamProvider<List<Opportunity>>((ref) {
   final repository = ref.watch(firestoreRepositoryProvider);
   final query = ref.watch(searchQueryProvider);
+  final location = ref.watch(locationQueryProvider);
+  final remoteOnly = ref.watch(remoteOnlyProvider);
   final category = ref.watch(selectedCategoryProvider);
 
-  return repository.opportunityStream(searchTerm: query, category: category);
+  return repository.opportunityStream(
+    searchTerm: query,
+    locationQuery: location,
+    remoteOnly: remoteOnly,
+    category: category,
+  );
 });
 
 final myApplicationsProvider = StreamProvider<List<Application>>((ref) {
