@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "802794726298",
+    "project_id": "aluinternship",
+    "storage_bucket": "aluinternship.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802794726298:android:73efc84483de94ace85023",
+        "android_client_info": {
+          "package_name": "com.alu.internship"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802794726298-eovomtc7jv4bg6qutcl3ivd545evut5n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXZnfnKD8_mRgXMHpiAML4xsdOCOwC0Ak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802794726298-eovomtc7jv4bg6qutcl3ivd545evut5n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
