@@ -10,7 +10,9 @@ class FirestoreRepository {
   FirestoreRepository({required this.firestore});
 
   Stream<UserProfile?> userProfileStream(String userId) {
-    return firestore.collection('users').doc(userId).snapshots().map((snapshot) {
+    return firestore.collection('users').doc(userId).snapshots().map((
+      snapshot,
+    ) {
       if (!snapshot.exists || snapshot.data() == null) {
         return null;
       }
@@ -23,25 +25,51 @@ class FirestoreRepository {
     String? locationQuery,
     bool remoteOnly = false,
     String? category,
+    String? type,
+    String? duration,
   }) {
-    final query = firestore.collection('opportunities').orderBy('postedAt', descending: true);
+    final query = firestore
+        .collection('opportunities')
+        .orderBy('postedAt', descending: true);
     return query.snapshots().map((snapshot) {
-      final opportunities = snapshot.docs.map((doc) => Opportunity.fromMap(doc.id, doc.data()));
+      final opportunities = snapshot.docs.map(
+        (doc) => Opportunity.fromMap(doc.id, doc.data()),
+      );
       return opportunities.where((opportunity) {
         final lowerSearch = searchTerm?.toLowerCase() ?? '';
         final lowerLocation = locationQuery?.toLowerCase() ?? '';
-        final matchesSearch = lowerSearch.isEmpty ||
+        final matchesSearch =
+            lowerSearch.isEmpty ||
             opportunity.title.toLowerCase().contains(lowerSearch) ||
             opportunity.organization.toLowerCase().contains(lowerSearch) ||
             opportunity.description.toLowerCase().contains(lowerSearch);
-        final matchesCategory = category == null || category.isEmpty || opportunity.tags.contains(category);
-        final matchesLocation = lowerLocation.isEmpty ||
+        final matchesCategory =
+            category == null ||
+            category.isEmpty ||
+            opportunity.tags.contains(category);
+        final matchesType =
+            type == null || type.isEmpty || opportunity.tags.contains(type);
+        final lowerDuration = duration?.toLowerCase() ?? '';
+        final matchesDuration =
+            lowerDuration.isEmpty ||
+            lowerDuration == 'any duration' ||
+            opportunity.timeCommitment.toLowerCase().contains(lowerDuration);
+        final matchesLocation =
+            lowerLocation.isEmpty ||
             opportunity.location.toLowerCase().contains(lowerLocation) ||
-            opportunity.tags.any((tag) => tag.toLowerCase().contains(lowerLocation));
-        final matchesRemote = !remoteOnly ||
+            opportunity.tags.any(
+              (tag) => tag.toLowerCase().contains(lowerLocation),
+            );
+        final matchesRemote =
+            !remoteOnly ||
             opportunity.location.toLowerCase() == 'remote' ||
             opportunity.tags.any((tag) => tag.toLowerCase() == 'remote');
-        return matchesSearch && matchesCategory && matchesLocation && matchesRemote;
+        return matchesSearch &&
+            matchesCategory &&
+            matchesType &&
+            matchesDuration &&
+            matchesLocation &&
+            matchesRemote;
       }).toList();
     });
   }
@@ -52,11 +80,18 @@ class FirestoreRepository {
         .where('applicantId', isEqualTo: userId)
         .orderBy('appliedAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Application.fromMap(doc.id, doc.data())).toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Application.fromMap(doc.id, doc.data()))
+              .toList(),
+        );
   }
 
   Future<void> saveUserProfile(UserProfile profile) {
-    return firestore.collection('users').doc(profile.id).set(profile.toMap(), SetOptions(merge: true));
+    return firestore
+        .collection('users')
+        .doc(profile.id)
+        .set(profile.toMap(), SetOptions(merge: true));
   }
 
   Future<void> postOpportunity(Opportunity opportunity) {

@@ -6,7 +6,9 @@ class DefaultFirebaseOptions {
     if (kIsWeb) {
       return web;
     }
-    throw UnsupportedError('DefaultFirebaseOptions have not been configured for this platform.');
+    throw UnsupportedError(
+      'DefaultFirebaseOptions have not been configured for this platform.',
+    );
   }
 
   static const FirebaseOptions web = FirebaseOptions(

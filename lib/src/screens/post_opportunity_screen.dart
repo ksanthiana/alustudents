@@ -10,7 +10,8 @@ class PostOpportunityScreen extends ConsumerStatefulWidget {
   const PostOpportunityScreen({super.key});
 
   @override
-  ConsumerState<PostOpportunityScreen> createState() => _PostOpportunityScreenState();
+  ConsumerState<PostOpportunityScreen> createState() =>
+      _PostOpportunityScreenState();
 }
 
 class _PostOpportunityScreenState extends ConsumerState<PostOpportunityScreen> {
@@ -48,7 +49,11 @@ class _PostOpportunityScreenState extends ConsumerState<PostOpportunityScreen> {
       title: titleController.text.trim(),
       organization: userProfile.organizationName ?? userProfile.displayName,
       description: descriptionController.text.trim(),
-      tags: tagsController.text.split(',').map((tag) => tag.trim()).where((tag) => tag.isNotEmpty).toList(),
+      tags: tagsController.text
+          .split(',')
+          .map((tag) => tag.trim())
+          .where((tag) => tag.isNotEmpty)
+          .toList(),
       location: locationController.text.trim(),
       timeCommitment: timeController.text.trim(),
       postedById: userProfile.id,
@@ -59,7 +64,9 @@ class _PostOpportunityScreenState extends ConsumerState<PostOpportunityScreen> {
 
     if (mounted) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opportunity posted successfully.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Opportunity posted successfully.')),
+      );
     }
   }
 
@@ -81,33 +88,82 @@ class _PostOpportunityScreenState extends ConsumerState<PostOpportunityScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(24),
-                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 18, offset: const Offset(0, 8))],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Create opportunity', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF111827))),
+                  const Text(
+                    'Create opportunity',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF111827),
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  const Text('Share this role with ALU students and startups.', style: TextStyle(fontSize: 14, color: Color(0xFF64748B), height: 1.6)),
+                  const Text(
+                    'Share this role with ALU students and startups.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF64748B),
+                      height: 1.6,
+                    ),
+                  ),
                   const SizedBox(height: 20),
-                  _buildTextField(label: 'Role title', controller: titleController),
+                  _buildTextField(
+                    label: 'Role title',
+                    controller: titleController,
+                  ),
                   const SizedBox(height: 14),
-                  _buildTextField(label: 'Description', controller: descriptionController, maxLines: 5),
+                  _buildTextField(
+                    label: 'Description',
+                    controller: descriptionController,
+                    maxLines: 5,
+                  ),
                   const SizedBox(height: 14),
-                  _buildTextField(label: 'Location', controller: locationController),
+                  _buildTextField(
+                    label: 'Location',
+                    controller: locationController,
+                  ),
                   const SizedBox(height: 14),
-                  _buildTextField(label: 'Time commitment', controller: timeController),
+                  _buildTextField(
+                    label: 'Time commitment',
+                    controller: timeController,
+                  ),
                   const SizedBox(height: 14),
-                  _buildTextField(label: 'Tags (comma separated)', controller: tagsController),
+                  _buildTextField(
+                    label: 'Tags (comma separated)',
+                    controller: tagsController,
+                  ),
                   const SizedBox(height: 20),
                   if (errorMessage != null) ...[
-                    Text(errorMessage!, style: const TextStyle(color: Color(0xFFB91C1C))),
+                    Text(
+                      errorMessage!,
+                      style: const TextStyle(color: Color(0xFFB91C1C)),
+                    ),
                     const SizedBox(height: 12),
                   ],
                   ElevatedButton(
                     onPressed: isLoading ? null : _submit,
-                    style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(56), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-                    child: isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('Post opportunity', style: TextStyle(fontSize: 16)),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(56),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                            'Post opportunity',
+                            style: TextStyle(fontSize: 16),
+                          ),
                   ),
                 ],
               ),
@@ -118,7 +174,11 @@ class _PostOpportunityScreenState extends ConsumerState<PostOpportunityScreen> {
     );
   }
 
-  Widget _buildTextField({required String label, required TextEditingController controller, int maxLines = 1}) {
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    int maxLines = 1,
+  }) {
     return TextField(
       controller: controller,
       maxLines: maxLines,
@@ -126,7 +186,10 @@ class _PostOpportunityScreenState extends ConsumerState<PostOpportunityScreen> {
         labelText: label,
         filled: true,
         fillColor: const Color(0xFFF8FAFC),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }

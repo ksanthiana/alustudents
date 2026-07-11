@@ -35,7 +35,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     if (!_isAluEmail(email)) {
       setState(() {
-        errorMessage = 'Use a valid ALU student email address ending with @alustudent.com';
+        errorMessage =
+            'Use a valid ALU student email address ending with @alustudent.com';
       });
       return;
     }
@@ -53,7 +54,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     });
 
     try {
-      final credential = await ref.read(authServiceProvider).signUpWithEmail(
+      final credential = await ref
+          .read(authServiceProvider)
+          .signUpWithEmail(
             email: emailController.text.trim(),
             password: passwordController.text.trim(),
           );
@@ -65,7 +68,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           displayName: nameController.text.trim(),
           email: emailController.text.trim(),
           isStartup: isStartup,
-          organizationName: isStartup ? organizationController.text.trim() : null,
+          organizationName: isStartup
+              ? organizationController.text.trim()
+              : null,
         );
         await ref.read(firestoreRepositoryProvider).saveUserProfile(profile);
 
@@ -134,36 +139,90 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         color: const Color(0xFFEEF2FF),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Icon(Icons.person_add_alt_1_rounded, color: Color(0xFF5B5BD6), size: 28),
+                      child: const Icon(
+                        Icons.person_add_alt_1_rounded,
+                        color: Color(0xFF5B5BD6),
+                        size: 28,
+                      ),
                     ),
                     const SizedBox(height: 18),
-                    const Text('Create your ALU account', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1E1B4B))),
+                    const Text(
+                      'Create your ALU account',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E1B4B),
+                      ),
+                    ),
                     const SizedBox(height: 8),
-                    const Text('Students and startups can both join the network to post and apply.', style: TextStyle(fontSize: 15, color: Color(0xFF64748B), height: 1.5)),
+                    const Text(
+                      'Students and startups can both join the network to post and apply.',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color(0xFF64748B),
+                        height: 1.5,
+                      ),
+                    ),
                     const SizedBox(height: 24),
-                    TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Full name', prefixIcon: Icon(Icons.person_outline))),
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Full name',
+                        prefixIcon: Icon(Icons.person_outline),
+                      ),
+                    ),
                     const SizedBox(height: 16),
-                    TextField(controller: emailController, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'ALU email', prefixIcon: Icon(Icons.email_outlined))),
+                    TextField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'ALU email',
+                        prefixIcon: Icon(Icons.email_outlined),
+                      ),
+                    ),
                     const SizedBox(height: 16),
-                    TextField(controller: passwordController, obscureText: true, decoration: const InputDecoration(labelText: 'Password', prefixIcon: Icon(Icons.lock_outline))),
+                    TextField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock_outline),
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     Material(
                       color: const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(16),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
                         child: SwitchListTile(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Register as ALU startup/organization', style: TextStyle(fontWeight: FontWeight.w600)),
-                          subtitle: const Text('Post opportunities and attract talent.', style: TextStyle(fontSize: 13)),
+                          title: const Text(
+                            'Register as ALU startup/organization',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          subtitle: const Text(
+                            'Post opportunities and attract talent.',
+                            style: TextStyle(fontSize: 13),
+                          ),
                           value: isStartup,
-                          onChanged: (value) => setState(() => isStartup = value),
+                          onChanged: (value) =>
+                              setState(() => isStartup = value),
                         ),
                       ),
                     ),
                     if (isStartup) ...[
                       const SizedBox(height: 12),
-                      TextField(controller: organizationController, decoration: const InputDecoration(labelText: 'Organization name', prefixIcon: Icon(Icons.business_outlined))),
+                      TextField(
+                        controller: organizationController,
+                        decoration: const InputDecoration(
+                          labelText: 'Organization name',
+                          prefixIcon: Icon(Icons.business_outlined),
+                        ),
+                      ),
                     ],
                     const SizedBox(height: 20),
                     if (errorMessage != null) ...[
@@ -174,7 +233,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           color: const Color(0xFFFFF1F2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Text(errorMessage!, style: const TextStyle(color: Color(0xFFBE123C))),
+                        child: Text(
+                          errorMessage!,
+                          style: const TextStyle(color: Color(0xFFBE123C)),
+                        ),
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -182,16 +244,31 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: isLoading ? null : _submit,
-                        child: isLoading ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Text('Create account'),
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('Create account'),
                       ),
                     ),
                     const SizedBox(height: 14),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('Already joined?', style: TextStyle(color: Color(0xFF64748B))),
+                        const Text(
+                          'Already joined?',
+                          style: TextStyle(color: Color(0xFF64748B)),
+                        ),
                         TextButton(
-                          onPressed: () => Navigator.pushReplacementNamed(context, SignInScreen.routeName),
+                          onPressed: () => Navigator.pushReplacementNamed(
+                            context,
+                            SignInScreen.routeName,
+                          ),
                           child: const Text('Sign in'),
                         ),
                       ],

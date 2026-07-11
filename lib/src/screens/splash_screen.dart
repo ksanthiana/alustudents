@@ -19,8 +19,11 @@ class SplashScreen extends ConsumerWidget {
         }
         return const HomeScreen();
       },
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (error, stack) => const Scaffold(body: Center(child: Text('Unable to initialize auth.'))),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (error, stack) => const Scaffold(
+        body: Center(child: Text('Unable to initialize auth.')),
+      ),
     );
   }
 }

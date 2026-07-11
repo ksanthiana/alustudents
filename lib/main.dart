@@ -11,7 +11,9 @@ Future<void> main() async {
 
   try {
     if (kIsWeb) {
-      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
     } else {
       // Try to initialize using generated platform options (if available).
       // If `DefaultFirebaseOptions` isn't configured for this platform,

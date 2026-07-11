@@ -34,6 +34,205 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final remoteOnly = ref.watch(remoteOnlyProvider);
 
     return Scaffold(
+      drawer: Drawer(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Filters',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: 'Search keywords',
+                      filled: true,
+                      fillColor: const Color(0xFFF8FAFC),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    onChanged: (v) =>
+                        ref.read(searchQueryProvider.notifier).state = v,
+                  ),
+                  const SizedBox(height: 18),
+                  const Text(
+                    'Type',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      _CategoryChip(
+                        label: 'Internship',
+                        selected:
+                            ref.watch(selectedTypeProvider) == 'Internship',
+                        onSelected: (s) =>
+                            ref.read(selectedTypeProvider.notifier).state = s
+                            ? 'Internship'
+                            : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Fellowship',
+                        selected:
+                            ref.watch(selectedTypeProvider) == 'Fellowship',
+                        onSelected: (s) =>
+                            ref.read(selectedTypeProvider.notifier).state = s
+                            ? 'Fellowship'
+                            : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Student Role',
+                        selected:
+                            ref.watch(selectedTypeProvider) == 'Student Role',
+                        onSelected: (s) =>
+                            ref.read(selectedTypeProvider.notifier).state = s
+                            ? 'Student Role'
+                            : null,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Categories',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: [
+                      _CategoryChip(
+                        label: 'Design',
+                        selected: category == 'Design',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Design' : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Engineering',
+                        selected: category == 'Engineering',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Engineering' : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Marketing',
+                        selected: category == 'Marketing',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Marketing' : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Data',
+                        selected: category == 'Data',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Data' : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Fellowships',
+                        selected: category == 'Fellowships',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Fellowships' : null,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Duration',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    initialValue:
+                        ref.watch(selectedDurationProvider) ?? 'Any duration',
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xFFF8FAFC),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'Any duration',
+                        child: Text('Any duration'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'Less than 1 month',
+                        child: Text('Less than 1 month'),
+                      ),
+                      DropdownMenuItem(
+                        value: '1-3 months',
+                        child: Text('1-3 months'),
+                      ),
+                      DropdownMenuItem(
+                        value: '3-6 months',
+                        child: Text('3-6 months'),
+                      ),
+                      DropdownMenuItem(
+                        value: '6+ months',
+                        child: Text('6+ months'),
+                      ),
+                    ],
+                    onChanged: (v) =>
+                        ref.read(selectedDurationProvider.notifier).state = v,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(52),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text('Search opportunities'),
+                  ),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: () {
+                      ref.read(searchQueryProvider.notifier).state = '';
+                      ref.read(locationQueryProvider.notifier).state = '';
+                      ref.read(remoteOnlyProvider.notifier).state = false;
+                      ref.read(selectedCategoryProvider.notifier).state = null;
+                      ref.read(selectedTypeProvider.notifier).state = null;
+                      ref.read(selectedDurationProvider.notifier).state =
+                          'Any duration';
+                    },
+                    child: const Text('Reset filters'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
       backgroundColor: const Color(0xFFF4F6FA),
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -42,20 +241,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            Text('ALU Internship Connect', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold, fontSize: 20)),
+            Text(
+              'ALU Internship Connect',
+              style: TextStyle(
+                color: Color(0xFF0F172A),
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
             SizedBox(height: 4),
-            Text('Find verified internships and student opportunities.', style: TextStyle(color: Color(0xFF475569), fontSize: 14)),
+            Text(
+              'Find verified internships and student opportunities.',
+              style: TextStyle(color: Color(0xFF475569), fontSize: 14),
+            ),
           ],
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.list_alt, color: Color(0xFF475569)),
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ApplicationsScreen())),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ApplicationsScreen()),
+            ),
             tooltip: 'My applications',
           ),
           IconButton(
             icon: const Icon(Icons.person, color: Color(0xFF475569)),
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen())),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ProfileScreen()),
+            ),
             tooltip: 'Profile',
           ),
           IconButton(
@@ -70,7 +285,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         data: (profile) {
           if (profile?.isStartup ?? false) {
             return FloatingActionButton.extended(
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PostOpportunityScreen())),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PostOpportunityScreen(),
+                ),
+              ),
               icon: const Icon(Icons.post_add),
               label: const Text('Post opportunity'),
             );
@@ -91,15 +311,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 8)),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
                 ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Explore opportunities', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF111827))),
+                  const Text(
+                    'Explore opportunities',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF111827),
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  const Text('Search internships, fellowships and student roles from ALU startups.', style: TextStyle(fontSize: 14, color: Color(0xFF64748B), height: 1.5)),
+                  const Text(
+                    'Search internships, fellowships and student roles from ALU startups.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF64748B),
+                      height: 1.5,
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   TextField(
                     decoration: InputDecoration(
@@ -107,9 +345,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       hintText: 'Search keywords',
                       filled: true,
                       fillColor: const Color(0xFFF8FAFC),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
-                    onChanged: (value) => ref.read(searchQueryProvider.notifier).state = value,
+                    onChanged: (value) =>
+                        ref.read(searchQueryProvider.notifier).state = value,
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -122,7 +364,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             hintText: 'Location',
                             filled: true,
                             fillColor: const Color(0xFFF8FAFC),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
                         ),
                       ),
@@ -132,7 +377,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           color: const Color(0xFFF8FAFC),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 10,
+                        ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -140,10 +388,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               scale: 0.9,
                               child: Switch(
                                 value: remoteOnly,
-                                onChanged: (value) => ref.read(remoteOnlyProvider.notifier).state = value,
+                                onChanged: (value) =>
+                                    ref
+                                            .read(remoteOnlyProvider.notifier)
+                                            .state =
+                                        value,
                               ),
                             ),
-                            const Text('Remote', style: TextStyle(fontSize: 13, color: Color(0xFF334155))),
+                            const Text(
+                              'Remote',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFF334155),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -154,11 +412,41 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     spacing: 10,
                     runSpacing: 10,
                     children: [
-                      _CategoryChip(label: 'Design', selected: category == 'Design', onSelected: (selected) => ref.read(selectedCategoryProvider.notifier).state = selected ? 'Design' : null),
-                      _CategoryChip(label: 'Engineering', selected: category == 'Engineering', onSelected: (selected) => ref.read(selectedCategoryProvider.notifier).state = selected ? 'Engineering' : null),
-                      _CategoryChip(label: 'Marketing', selected: category == 'Marketing', onSelected: (selected) => ref.read(selectedCategoryProvider.notifier).state = selected ? 'Marketing' : null),
-                      _CategoryChip(label: 'Data', selected: category == 'Data', onSelected: (selected) => ref.read(selectedCategoryProvider.notifier).state = selected ? 'Data' : null),
-                      _CategoryChip(label: 'Fellowships', selected: category == 'Fellowships', onSelected: (selected) => ref.read(selectedCategoryProvider.notifier).state = selected ? 'Fellowships' : null),
+                      _CategoryChip(
+                        label: 'Design',
+                        selected: category == 'Design',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Design' : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Engineering',
+                        selected: category == 'Engineering',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Engineering' : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Marketing',
+                        selected: category == 'Marketing',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Marketing' : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Data',
+                        selected: category == 'Data',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Data' : null,
+                      ),
+                      _CategoryChip(
+                        label: 'Fellowships',
+                        selected: category == 'Fellowships',
+                        onSelected: (selected) =>
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                selected ? 'Fellowships' : null,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 18),
@@ -166,7 +454,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     onPressed: () => FocusScope.of(context).unfocus(),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(52),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
                     child: const Text('Search opportunities'),
                   ),
@@ -182,11 +472,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: const [
-                          Icon(Icons.search_off, size: 56, color: Color(0xFF94A3B8)),
+                          Icon(
+                            Icons.search_off,
+                            size: 56,
+                            color: Color(0xFF94A3B8),
+                          ),
                           SizedBox(height: 16),
-                          Text('No opportunities found', style: TextStyle(fontSize: 16, color: Color(0xFF475569))),
+                          Text(
+                            'No opportunities found',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xFF475569),
+                            ),
+                          ),
                           SizedBox(height: 6),
-                          Text('Try broadening your keywords or choosing another category.', style: TextStyle(fontSize: 14, color: Color(0xFF64748B))),
+                          Text(
+                            'Try broadening your keywords or choosing another category.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF64748B),
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -202,7 +508,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Center(child: Text('Error loading opportunities: $error', style: const TextStyle(color: Color(0xFFEF4444)))),
+                error: (error, stack) => Center(
+                  child: Text(
+                    'Error loading opportunities: $error',
+                    style: const TextStyle(color: Color(0xFFEF4444)),
+                  ),
+                ),
               ),
             ),
           ],
@@ -217,12 +528,21 @@ class _CategoryChip extends StatelessWidget {
   final bool selected;
   final ValueChanged<bool> onSelected;
 
-  const _CategoryChip({required this.label, required this.selected, required this.onSelected});
+  const _CategoryChip({
+    required this.label,
+    required this.selected,
+    required this.onSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChoiceChip(
-      label: Text(label, style: TextStyle(color: selected ? Colors.white : const Color(0xFF334155))),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: selected ? Colors.white : const Color(0xFF334155),
+        ),
+      ),
       selected: selected,
       onSelected: onSelected,
       selectedColor: const Color(0xFF4338CA),
@@ -245,7 +565,12 @@ class OpportunityCard extends ConsumerWidget {
     final authState = ref.watch(authStateProvider);
 
     return InkWell(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => OpportunityDetailScreen(opportunity: opportunity))),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => OpportunityDetailScreen(opportunity: opportunity),
+        ),
+      ),
       borderRadius: BorderRadius.circular(24),
       child: Container(
         padding: const EdgeInsets.all(18),
@@ -253,7 +578,11 @@ class OpportunityCard extends ConsumerWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 18, offset: const Offset(0, 8)),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
           ],
         ),
         child: Column(
@@ -266,19 +595,41 @@ class OpportunityCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(opportunity.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF111827))),
+                      Text(
+                        opportunity.title,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF111827),
+                        ),
+                      ),
                       const SizedBox(height: 6),
-                      Text(opportunity.organization, style: const TextStyle(fontSize: 14, color: Color(0xFF475569))),
+                      Text(
+                        opportunity.organization,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF475569),
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFEEF2FF),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(opportunity.timeCommitment, style: const TextStyle(color: Color(0xFF4338CA), fontSize: 12)),
+                  child: Text(
+                    opportunity.timeCommitment,
+                    style: const TextStyle(
+                      color: Color(0xFF4338CA),
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -286,35 +637,72 @@ class OpportunityCard extends ConsumerWidget {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: opportunity.tags.take(4).map((tag) => Chip(label: Text(tag), backgroundColor: const Color(0xFFF8FAFC), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)))).toList(),
+              children: opportunity.tags
+                  .take(4)
+                  .map(
+                    (tag) => Chip(
+                      label: Text(tag),
+                      backgroundColor: const Color(0xFFF8FAFC),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
             const SizedBox(height: 14),
             Row(
               children: [
-                const Icon(Icons.location_on_outlined, size: 16, color: Color(0xFF64748B)),
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 16,
+                  color: Color(0xFF64748B),
+                ),
                 const SizedBox(width: 6),
-                Expanded(child: Text(opportunity.location, style: const TextStyle(color: Color(0xFF64748B)))),
+                Expanded(
+                  child: Text(
+                    opportunity.location,
+                    style: const TextStyle(color: Color(0xFF64748B)),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 14),
             Row(
               children: [
                 Expanded(
-                  child: Text('Posted ${postedDays}d ago', style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+                  child: Text(
+                    'Posted ${postedDays}d ago',
+                    style: const TextStyle(
+                      color: Color(0xFF94A3B8),
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(100, 40),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
                   onPressed: () {
                     if (authState.asData?.value == null) {
                       Navigator.pushNamed(context, '/sign-in');
                       return;
                     }
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => OpportunityDetailScreen(opportunity: opportunity)));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            OpportunityDetailScreen(opportunity: opportunity),
+                      ),
+                    );
                   },
-                  child: Text(authState.asData?.value == null ? 'Sign in' : 'Apply', style: const TextStyle(fontSize: 14)),
+                  child: Text(
+                    authState.asData?.value == null ? 'Sign in' : 'Apply',
+                    style: const TextStyle(fontSize: 14),
+                  ),
                 ),
               ],
             ),

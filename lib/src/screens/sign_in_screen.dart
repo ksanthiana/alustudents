@@ -31,7 +31,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     if (!_isAluEmail(email)) {
       setState(() {
-        errorMessage = 'Please use your ALU student email address ending with @alustudent.com.';
+        errorMessage =
+            'Please use your ALU student email address ending with @alustudent.com.';
       });
       return;
     }
@@ -42,10 +43,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     });
 
     try {
-      await ref.read(authServiceProvider).signInWithEmail(
-            email: email,
-            password: password,
-          );
+      await ref
+          .read(authServiceProvider)
+          .signInWithEmail(email: email, password: password);
 
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/home');
@@ -108,12 +108,30 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         color: const Color(0xFFEEF2FF),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Icon(Icons.lock_open_rounded, color: Color(0xFF5B5BD6), size: 28),
+                      child: const Icon(
+                        Icons.lock_open_rounded,
+                        color: Color(0xFF5B5BD6),
+                        size: 28,
+                      ),
                     ),
                     const SizedBox(height: 18),
-                    const Text('Welcome back', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1E1B4B))),
+                    const Text(
+                      'Welcome back',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E1B4B),
+                      ),
+                    ),
                     const SizedBox(height: 8),
-                    const Text('Sign in to discover verified ALU startup opportunities.', style: TextStyle(fontSize: 15, color: Color(0xFF64748B), height: 1.5)),
+                    const Text(
+                      'Sign in to discover verified ALU startup opportunities.',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color(0xFF64748B),
+                        height: 1.5,
+                      ),
+                    ),
                     const SizedBox(height: 24),
                     TextField(
                       controller: emailController,
@@ -141,7 +159,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                           color: const Color(0xFFFFF1F2),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Text(errorMessage!, style: const TextStyle(color: Color(0xFFBE123C))),
+                        child: Text(
+                          errorMessage!,
+                          style: const TextStyle(color: Color(0xFFBE123C)),
+                        ),
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -149,16 +170,31 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: isLoading ? null : _submit,
-                        child: isLoading ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Text('Sign In'),
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('Sign In'),
                       ),
                     ),
                     const SizedBox(height: 18),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('New to ALU Connect?', style: TextStyle(color: Color(0xFF64748B))),
+                        const Text(
+                          'New to ALU Connect?',
+                          style: TextStyle(color: Color(0xFF64748B)),
+                        ),
                         TextButton(
-                          onPressed: () => Navigator.pushNamed(context, SignUpScreen.routeName),
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            SignUpScreen.routeName,
+                          ),
                           child: const Text('Create account'),
                         ),
                       ],

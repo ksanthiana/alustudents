@@ -37,8 +37,11 @@ class AluInternApp extends ConsumerWidget {
           }
           return const HomeScreen();
         },
-        loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-        error: (error, stack) => const Scaffold(body: Center(child: Text('Failed to initialize app'))),
+        loading: () =>
+            const Scaffold(body: Center(child: CircularProgressIndicator())),
+        error: (error, stack) => const Scaffold(
+          body: Center(child: Text('Failed to initialize app')),
+        ),
       ),
     );
   }

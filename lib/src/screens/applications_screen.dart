@@ -24,7 +24,10 @@ class ApplicationsScreen extends ConsumerWidget {
           data: (applications) {
             if (applications.isEmpty) {
               return const Center(
-                child: Text('You have not applied to any opportunities yet.', style: TextStyle(color: Color(0xFF475569), fontSize: 16)),
+                child: Text(
+                  'You have not applied to any opportunities yet.',
+                  style: TextStyle(color: Color(0xFF475569), fontSize: 16),
+                ),
               );
             }
             return ListView.separated(
@@ -37,7 +40,12 @@ class ApplicationsScreen extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Error loading applications: $error', style: const TextStyle(color: Color(0xFFEF4444)))),
+          error: (error, stack) => Center(
+            child: Text(
+              'Error loading applications: $error',
+              style: const TextStyle(color: Color(0xFFEF4444)),
+            ),
+          ),
         ),
       ),
     );
@@ -55,7 +63,13 @@ class ApplicationCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 16, offset: const Offset(0, 8))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       padding: const EdgeInsets.all(18),
       child: Row(
@@ -63,7 +77,10 @@ class ApplicationCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: const Color(0xFFEEF2FF), borderRadius: BorderRadius.circular(14)),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEEF2FF),
+              borderRadius: BorderRadius.circular(14),
+            ),
             child: const Icon(Icons.work_outline, color: Color(0xFF4338CA)),
           ),
           const SizedBox(width: 16),
@@ -71,9 +88,19 @@ class ApplicationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Opportunity ${application.opportunityId}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF111827))),
+                Text(
+                  'Opportunity ${application.opportunityId}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF111827),
+                  ),
+                ),
                 const SizedBox(height: 6),
-                Text('Status: ${application.status}', style: const TextStyle(color: Color(0xFF475569))),
+                Text(
+                  'Status: ${application.status}',
+                  style: const TextStyle(color: Color(0xFF475569)),
+                ),
               ],
             ),
           ),
@@ -81,11 +108,21 @@ class ApplicationCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Chip(
-                label: Text(application.status.toUpperCase(), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF334155))),
+                label: Text(
+                  application.status.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF334155),
+                  ),
+                ),
                 backgroundColor: const Color(0xFFF8FAFC),
               ),
               const SizedBox(height: 8),
-              Text('${application.appliedAt.month}/${application.appliedAt.day}/${application.appliedAt.year}', style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+              Text(
+                '${application.appliedAt.month}/${application.appliedAt.day}/${application.appliedAt.year}',
+                style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+              ),
             ],
           ),
         ],
