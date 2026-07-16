@@ -108,24 +108,24 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFF8FAFC), Color(0xFFEFF2FF)],
+            colors: [Color(0xFFF8FAFC), Color(0xFFE9F2EC)],
           ),
         ),
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(20),
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 520),
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.06),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 28,
+                      offset: const Offset(0, 14),
                     ),
                   ],
                 ),
@@ -151,15 +151,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E1B4B),
+                        color: Color(0xFF111827),
                       ),
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'Students and startups can both join the network to post and apply.',
+                      'Students and startups can both join the network and grow together.',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Color(0xFF64748B),
+                        color: Color(0xFF475569),
                         height: 1.5,
                       ),
                     ),

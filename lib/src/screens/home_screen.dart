@@ -18,268 +18,78 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final locationController = TextEditingController();
+  final searchController = TextEditingController();
+  int _selectedNavIndex = 0;
 
   @override
   void dispose() {
-    locationController.dispose();
+    searchController.dispose();
     super.dispose();
+  }
+
+  void _onNavTap(int index) {
+    setState(() => _selectedNavIndex = index);
+    
+    switch (index) {
+      case 1:
+        // Explore
+        break;
+      case 2:
+        // Applications
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const ApplicationsScreen()),
+        );
+        _selectedNavIndex = 0;
+        break;
+      case 3:
+        // Profile
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const ProfileScreen()),
+        );
+        _selectedNavIndex = 0;
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final opportunitiesAsync = ref.watch(opportunityListProvider);
     final userProfileAsync = ref.watch(userProfileProvider);
-    final category = ref.watch(selectedCategoryProvider);
-    final remoteOnly = ref.watch(remoteOnlyProvider);
 
     return Scaffold(
-      drawer: Drawer(
-        child: SafeArea(
+      backgroundColor: const Color(0xFFF6F7FB),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Filters',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search keywords',
-                      filled: true,
-                      fillColor: const Color(0xFFF8FAFC),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                    onChanged: (v) =>
-                        ref.read(searchQueryProvider.notifier).state = v,
-                  ),
-                  const SizedBox(height: 18),
-                  const Text(
-                    'Type',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    children: [
-                      _CategoryChip(
-                        label: 'Internship',
-                        selected:
-                            ref.watch(selectedTypeProvider) == 'Internship',
-                        onSelected: (s) =>
-                            ref.read(selectedTypeProvider.notifier).state = s
-                            ? 'Internship'
-                            : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Fellowship',
-                        selected:
-                            ref.watch(selectedTypeProvider) == 'Fellowship',
-                        onSelected: (s) =>
-                            ref.read(selectedTypeProvider.notifier).state = s
-                            ? 'Fellowship'
-                            : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Student Role',
-                        selected:
-                            ref.watch(selectedTypeProvider) == 'Student Role',
-                        onSelected: (s) =>
-                            ref.read(selectedTypeProvider.notifier).state = s
-                            ? 'Student Role'
-                            : null,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Categories',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      _CategoryChip(
-                        label: 'Design',
-                        selected: category == 'Design',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Design' : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Engineering',
-                        selected: category == 'Engineering',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Engineering' : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Marketing',
-                        selected: category == 'Marketing',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Marketing' : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Data',
-                        selected: category == 'Data',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Data' : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Fellowships',
-                        selected: category == 'Fellowships',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Fellowships' : null,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Duration',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    initialValue:
-                        ref.watch(selectedDurationProvider) ?? 'Any duration',
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: const Color(0xFFF8FAFC),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'Any duration',
-                        child: Text('Any duration'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Less than 1 month',
-                        child: Text('Less than 1 month'),
-                      ),
-                      DropdownMenuItem(
-                        value: '1-3 months',
-                        child: Text('1-3 months'),
-                      ),
-                      DropdownMenuItem(
-                        value: '3-6 months',
-                        child: Text('3-6 months'),
-                      ),
-                      DropdownMenuItem(
-                        value: '6+ months',
-                        child: Text('6+ months'),
-                      ),
-                    ],
-                    onChanged: (v) =>
-                        ref.read(selectedDurationProvider.notifier).state = v,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(52),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text('Search opportunities'),
-                  ),
-                  const SizedBox(height: 12),
-                  TextButton(
-                    onPressed: () {
-                      ref.read(searchQueryProvider.notifier).state = '';
-                      ref.read(locationQueryProvider.notifier).state = '';
-                      ref.read(remoteOnlyProvider.notifier).state = false;
-                      ref.read(selectedCategoryProvider.notifier).state = null;
-                      ref.read(selectedTypeProvider.notifier).state = null;
-                      ref.read(selectedDurationProvider.notifier).state =
-                          'Any duration';
-                    },
-                    child: const Text('Reset filters'),
-                  ),
-                ],
-              ),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with greeting and profile
+                _buildHeader(userProfileAsync),
+                const SizedBox(height: 24),
+                
+                // Search bar with filter
+                _buildSearchBar(context),
+                const SizedBox(height: 24),
+
+                // Recommended section
+                _buildRecommendedSection(context, opportunitiesAsync),
+                const SizedBox(height: 32),
+
+                // Browse by category
+                _buildCategorySection(),
+                const SizedBox(height: 32),
+
+                // Recent opportunities
+                _buildRecentOpportunitiesSection(context, opportunitiesAsync),
+                const SizedBox(height: 24),
+              ],
             ),
           ),
         ),
-      ),
-      backgroundColor: const Color(0xFFF4F6FA),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        titleSpacing: 16,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              'ALU Internship Connect',
-              style: TextStyle(
-                color: Color(0xFF0F172A),
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            SizedBox(height: 4),
-            Text(
-              'Find verified internships and student opportunities.',
-              style: TextStyle(color: Color(0xFF475569), fontSize: 14),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.list_alt, color: Color(0xFF475569)),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ApplicationsScreen()),
-            ),
-            tooltip: 'My applications',
-          ),
-          IconButton(
-            icon: const Icon(Icons.person, color: Color(0xFF475569)),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
-            ),
-            tooltip: 'Profile',
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout, color: Color(0xFF475569)),
-            onPressed: () => ref.read(authServiceProvider).signOut(),
-            tooltip: 'Sign out',
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       floatingActionButton: userProfileAsync.when(
         data: (profile) {
@@ -291,8 +101,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   builder: (context) => const PostOpportunityScreen(),
                 ),
               ),
-              icon: const Icon(Icons.post_add),
-              label: const Text('Post opportunity'),
+              icon: const Icon(Icons.add),
+              label: const Text('Post Opportunity'),
+              backgroundColor: const Color(0xFF6366F1),
             );
           }
           return null;
@@ -300,411 +111,517 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         loading: () => const SizedBox.shrink(),
         error: (error, stack) => const SizedBox.shrink(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Explore opportunities',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF111827),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Search internships, fellowships and student roles from ALU startups.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xFF64748B),
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search keywords',
-                      filled: true,
-                      fillColor: const Color(0xFFF8FAFC),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                    onChanged: (value) =>
-                        ref.read(searchQueryProvider.notifier).state = value,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: locationController,
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.location_on_outlined),
-                            hintText: 'Location',
-                            filled: true,
-                            fillColor: const Color(0xFFF8FAFC),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF8FAFC),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Transform.scale(
-                              scale: 0.9,
-                              child: Switch(
-                                value: remoteOnly,
-                                onChanged: (value) =>
-                                    ref
-                                            .read(remoteOnlyProvider.notifier)
-                                            .state =
-                                        value,
-                              ),
-                            ),
-                            const Text(
-                              'Remote',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Color(0xFF334155),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      _CategoryChip(
-                        label: 'Design',
-                        selected: category == 'Design',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Design' : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Engineering',
-                        selected: category == 'Engineering',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Engineering' : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Marketing',
-                        selected: category == 'Marketing',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Marketing' : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Data',
-                        selected: category == 'Data',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Data' : null,
-                      ),
-                      _CategoryChip(
-                        label: 'Fellowships',
-                        selected: category == 'Fellowships',
-                        onSelected: (selected) =>
-                            ref.read(selectedCategoryProvider.notifier).state =
-                                selected ? 'Fellowships' : null,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 18),
-                  ElevatedButton(
-                    onPressed: () => FocusScope.of(context).unfocus(),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(52),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: const Text('Search opportunities'),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: opportunitiesAsync.when(
-                data: (opportunities) {
-                  if (opportunities.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          Icon(
-                            Icons.search_off,
-                            size: 56,
-                            color: Color(0xFF94A3B8),
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'No opportunities found',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF475569),
-                            ),
-                          ),
-                          SizedBox(height: 6),
-                          Text(
-                            'Try broadening your keywords or choosing another category.',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF64748B),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedNavIndex,
+        onTap: _onNavTap,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search_outlined),
+            activeIcon: Icon(Icons.search),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark_outline),
+            activeIcon: Icon(Icons.bookmark),
+            label: 'Applications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
 
-                  return ListView.separated(
-                    itemCount: opportunities.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final opportunity = opportunities[index];
-                      return OpportunityCard(opportunity: opportunity);
-                    },
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Center(
-                  child: Text(
-                    'Error loading opportunities: $error',
-                    style: const TextStyle(color: Color(0xFFEF4444)),
+  Widget _buildHeader(AsyncValue<dynamic> userProfileAsync) {
+    return userProfileAsync.when(
+      data: (profile) {
+        final displayName = profile?.displayName ?? 'User';
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Hello, $displayName ',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF111827),
+                      ),
+                    ),
+                    const Text('👋'),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Find meaningful ways to contribute.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF64748B),
+                  ),
+                ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfileScreen()),
+              ),
+              child: CircleAvatar(
+                radius: 24,
+                backgroundColor: const Color(0xFFE5E5FF),
+                child: Text(
+                  displayName[0].toUpperCase(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF6366F1),
                   ),
                 ),
               ),
             ),
           ],
-        ),
+        );
+      },
+      loading: () => const SizedBox(height: 60),
+      error: (error, stack) => const SizedBox(height: 60),
+    );
+  }
+
+  Widget _buildSearchBar(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search, color: Color(0xFF94A3B8)),
+                hintText: 'Search opportunities...',
+                border: InputBorder.none,
+                hintStyle: const TextStyle(color: Color(0xFFCBD5E1)),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              onChanged: (value) =>
+                  ref.read(searchQueryProvider.notifier).state = value,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.tune, color: Color(0xFF475569)),
+              onPressed: () {
+                // TODO: Show advanced filters
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class _CategoryChip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final ValueChanged<bool> onSelected;
-
-  const _CategoryChip({
-    required this.label,
-    required this.selected,
-    required this.onSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(
-        label,
-        style: TextStyle(
-          color: selected ? Colors.white : const Color(0xFF334155),
+  Widget _buildRecommendedSection(
+    BuildContext context,
+    AsyncValue<List<Opportunity>> opportunitiesAsync,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Recommended',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF111827),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                // TODO: Navigate to all recommendations
+              },
+              child: const Text('See all'),
+            ),
+          ],
         ),
-      ),
-      selected: selected,
-      onSelected: onSelected,
-      selectedColor: const Color(0xFF4338CA),
-      backgroundColor: const Color(0xFFF8FAFC),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 0,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        const SizedBox(height: 12),
+        opportunitiesAsync.when(
+          data: (opportunities) {
+            if (opportunities.isEmpty) {
+              return const SizedBox.shrink();
+            }
+            
+            // Show first opportunity as featured
+            final featured = opportunities.first;
+            return GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => OpportunityDetailScreen(opportunity: featured),
+                ),
+              ),
+              child: _buildFeaturedCard(featured),
+            );
+          },
+          loading: () => const SizedBox(
+            height: 200,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          error: (error, stack) => const SizedBox.shrink(),
+        ),
+      ],
     );
   }
-}
 
-class OpportunityCard extends ConsumerWidget {
-  final Opportunity opportunity;
+  Widget _buildFeaturedCard(Opportunity opportunity) {
+    final daysAgo = DateTime.now().difference(opportunity.postedAt).inDays;
+    
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFB794F6), Color(0xFFEC4899)],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      opportunity.title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      opportunity.organization,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.bookmark_outline, color: Colors.white),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            children: opportunity.tags.take(3).map((tag) {
+              return Chip(
+                label: Text(
+                  tag,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Colors.white,
+                  ),
+                ),
+                backgroundColor: Colors.white.withValues(alpha: 0.25),
+                side: BorderSide.none,
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${opportunity.timeCommitment} • $daysAgo' 'd ago',
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.white70,
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFFEC4899),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => OpportunityDetailScreen(
+                      opportunity: opportunity,
+                    ),
+                  ),
+                ),
+                child: const Text('View'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-  const OpportunityCard({super.key, required this.opportunity});
+  Widget _buildCategorySection() {
+    final categories = [
+      ('Design', Icons.design_services),
+      ('Engineering', Icons.engineering),
+      ('Marketing', Icons.trending_up),
+      ('Data', Icons.bar_chart),
+      ('Other', Icons.category),
+    ];
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final postedDays = DateTime.now().difference(opportunity.postedAt).inDays;
-    final authState = ref.watch(authStateProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Browse by category',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF111827),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: categories.map((cat) {
+            return _buildCategoryIcon(cat.$1, cat.$2);
+          }).toList(),
+        ),
+      ],
+    );
+  }
 
-    return InkWell(
+  Widget _buildCategoryIcon(String label, IconData icon) {
+    return GestureDetector(
+      onTap: () {
+        ref.read(selectedCategoryProvider.notifier).state = label;
+      },
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(
+              icon,
+              color: const Color(0xFF6366F1),
+              size: 28,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Color(0xFF475569),
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentOpportunitiesSection(
+    BuildContext context,
+    AsyncValue<List<Opportunity>> opportunitiesAsync,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Recent opportunities',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF111827),
+          ),
+        ),
+        const SizedBox(height: 12),
+        opportunitiesAsync.when(
+          data: (opportunities) {
+            if (opportunities.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 32.0),
+                  child: Column(
+                    children: const [
+                      Icon(
+                        Icons.search_off,
+                        size: 48,
+                        color: Color(0xFFCBD5E1),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        'No opportunities found',
+                        style: TextStyle(
+                          color: Color(0xFF64748B),
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            return ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: opportunities.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              itemBuilder: (_, index) {
+                final opp = opportunities[index];
+                return _buildOpportunityItem(context, opp);
+              },
+            );
+          },
+          loading: () => const Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 32.0),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          error: (error, stack) => Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32.0),
+              child: Text(
+                'Error: $error',
+                style: const TextStyle(color: Color(0xFFEF4444)),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOpportunityItem(BuildContext context, Opportunity opportunity) {
+    final daysAgo = DateTime.now().difference(opportunity.postedAt).inDays;
+    
+    return GestureDetector(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
           builder: (_) => OpportunityDetailScreen(opportunity: opportunity),
         ),
       ),
-      borderRadius: BorderRadius.circular(24),
       child: Container(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 18,
-              offset: const Offset(0, 8),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        opportunity.title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF111827),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        opportunity.organization,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF475569),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEEF2FF),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    opportunity.timeCommitment,
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE5E5FF),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.work_outline,
+                color: Color(0xFF6366F1),
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    opportunity.title,
                     style: const TextStyle(
-                      color: Color(0xFF4338CA),
-                      fontSize: 12,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF111827),
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: opportunity.tags
-                  .take(4)
-                  .map(
-                    (tag) => Chip(
-                      label: Text(tag),
-                      backgroundColor: const Color(0xFFF8FAFC),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  size: 16,
-                  color: Color(0xFF64748B),
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    opportunity.location,
-                    style: const TextStyle(color: Color(0xFF64748B)),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Posted ${postedDays}d ago',
+                  const SizedBox(height: 4),
+                  Text(
+                    '${opportunity.organization} • $daysAgo' 'd ago',
                     style: const TextStyle(
-                      color: Color(0xFF94A3B8),
                       fontSize: 12,
+                      color: Color(0xFF64748B),
                     ),
                   ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(100, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (authState.asData?.value == null) {
-                      Navigator.pushNamed(context, '/sign-in');
-                      return;
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            OpportunityDetailScreen(opportunity: opportunity),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    authState.asData?.value == null ? 'Sign in' : 'Apply',
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ),
-              ],
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.bookmark_outline, size: 20),
+              onPressed: () {},
             ),
           ],
         ),

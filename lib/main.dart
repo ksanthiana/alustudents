@@ -15,9 +15,6 @@ Future<void> main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
     } else {
-      // Try to initialize using generated platform options (if available).
-      // If `DefaultFirebaseOptions` isn't configured for this platform,
-      // fall back to the default initialization which reads `google-services.json`.
       try {
         final options = DefaultFirebaseOptions.currentPlatform;
         await Firebase.initializeApp(options: options);
@@ -25,6 +22,8 @@ Future<void> main() async {
         await Firebase.initializeApp();
       }
     }
+
+    // Firebase emulator setup is intentionally disabled for this build.
   } catch (err) {
     debugPrint('FIREBASE INITIALIZATION ERROR: $err');
   }

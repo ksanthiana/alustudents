@@ -28,6 +28,7 @@ class OpportunityDetailScreen extends ConsumerWidget {
     final application = Application(
       id: '',
       opportunityId: opportunity.id,
+      opportunityTitle: opportunity.title,
       applicantId: authState.uid,
       status: 'applied',
       appliedAt: DateTime.now(),

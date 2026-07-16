@@ -1,13 +1,4 @@
-// seed_opportunities.dart
-//
-// One-time script to populate the Firestore "opportunities" collection
-// with the sample internships and fellowships you provided.
-//
-// Run this file with:
-//   flutter run -t lib/scripts/seed_opportunities.dart -d chrome
-//
-// If you already have a firebase_options.dart file, keep the import below.
-// If you do not, remove the import and pass no options to initializeApp.
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import 'sign_in_screen.dart';
@@ -13,164 +15,164 @@ class OnboardingScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF4F46E5), Color(0xFF0EA5E9)],
+          gradient: RadialGradient(
+            center: Alignment(-0.4, -0.8),
+            radius: 1.5,
+            colors: [Color(0xFF172A23), Color(0xFF0B1511)],
+            stops: [0.0, 1.0],
           ),
         ),
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 520),
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.96),
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.12),
-                      blurRadius: 24,
-                      offset: const Offset(0, 12),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 56,
-                      height: 56,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(32),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEEF2FF),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: const Icon(
-                        Icons.school_rounded,
-                        color: Color(0xFF5B5BD6),
-                        size: 30,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Welcome to ALU Internship Connect',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E1B4B),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Discover verified internship opportunities from ALU student-led ventures and startups in one polished place.',
-                      style: TextStyle(
-                        fontSize: 15,
-                        height: 1.6,
-                        color: Color(0xFF64748B),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    _FeatureItem(
-                      text: 'Verified ALU startup and student accounts only.',
-                    ),
-                    _FeatureItem(
-                      text:
-                          'Explore roles in engineering, design, marketing, and research.',
-                    ),
-                    _FeatureItem(
-                      text:
-                          'Track applications and manage your startup profile from one place.',
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          SignUpScreen.routeName,
+                        color: const Color(0xFFFFFFFF).withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(32),
+                        border: Border.all(
+                          color: const Color(0xFFFFFFFF).withValues(alpha: 0.14),
+                          width: 1,
                         ),
-                        child: const Text('Create your ALU account'),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          SignInScreen.routeName,
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 14,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.20),
+                            blurRadius: 32,
+                            offset: const Offset(0, 18),
                           ),
-                          side: const BorderSide(color: Color(0xFFCBD5E1)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 90,
+                            height: 90,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.18),
+                                  blurRadius: 14,
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.school_rounded,
+                                size: 42,
+                                color: Color(0xFF166534),
+                              ),
+                            ),
                           ),
-                        ),
-                        child: const Text('I already have an account'),
+                          const SizedBox(height: 28),
+                          const Text(
+                            'ALU Internship Connect',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Connect with verified student-led startups and internships in a polished mobile experience.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFFCED4DA),
+                              height: 1.6,
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.pushNamed(
+                                context,
+                                SignInScreen.routeName,
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                side: BorderSide(
+                                  color: Colors.white.withValues(alpha: 0.32),
+                                  width: 1.2,
+                                ),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                                backgroundColor: Colors.white.withValues(alpha: 0.08),
+                              ),
+                              child: const Text(
+                                'Log In',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.pushNamed(
+                                context,
+                                SignUpScreen.routeName,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF166534),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                              ),
+                              child: const Text(
+                                'Sign Up',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFFFFF).withValues(alpha: 0.06),
+                              borderRadius: BorderRadius.circular(22),
+                              border: Border.all(
+                                color: const Color(0xFFFFFFFF).withValues(alpha: 0.10),
+                                width: 1,
+                              ),
+                            ),
+                            child: const Text(
+                              'Only ALU student emails ending in @alustudent.com can register.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFFBECBD4),
+                                height: 1.6,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF8FAFC),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const Text(
-                        'Only ALU student emails ending in @alustudent.com can register. Use the correct email to stay approved.',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF475569),
-                          height: 1.5,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _FeatureItem extends StatelessWidget {
-  final String text;
-
-  const _FeatureItem({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(
-            Icons.check_circle_outline,
-            color: Color(0xFF5B5BD6),
-            size: 20,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontSize: 15,
-                color: Color(0xFF334155),
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
