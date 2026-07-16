@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/application.dart';
 import '../models/user_profile.dart';
 import '../state/app_providers.dart';
+import 'onboarding_screen.dart';
 import 'post_opportunity_screen.dart';
 
 Map<String, int> buildProfileStats(List<Application> applications) {
@@ -215,7 +216,16 @@ class ProfileScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: TextButton.icon(
-                      onPressed: () => ref.read(authServiceProvider).signOut(),
+                      onPressed: () async {
+                        if (!context.mounted) return;
+
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          OnboardingScreen.routeName,
+                          (route) => false,
+                        );
+
+                        await ref.read(authServiceProvider).signOut();
+                      },
                       icon: const Icon(
                         Icons.logout,
                         color: Color(0xFFEF4444),

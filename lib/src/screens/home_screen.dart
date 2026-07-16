@@ -31,11 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     setState(() => _selectedNavIndex = index);
     
     switch (index) {
-      case 1:
-        // Explore
-        break;
       case 2:
-        // Applications
         Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => const ApplicationsScreen()),
@@ -43,7 +39,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         _selectedNavIndex = 0;
         break;
       case 3:
-        // Profile
         Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => const ProfileScreen()),
@@ -67,23 +62,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header with greeting and profile
                 _buildHeader(userProfileAsync),
                 const SizedBox(height: 24),
-                
-                // Search bar with filter
                 _buildSearchBar(context),
                 const SizedBox(height: 24),
-
-                // Recommended section
                 _buildRecommendedSection(context, opportunitiesAsync),
                 const SizedBox(height: 32),
-
-                // Browse by category
                 _buildCategorySection(),
                 const SizedBox(height: 32),
-
-                // Recent opportunities
                 _buildRecentOpportunitiesSection(context, opportunitiesAsync),
                 const SizedBox(height: 24),
               ],

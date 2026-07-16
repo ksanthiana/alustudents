@@ -53,7 +53,6 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen>
       ),
       body: Column(
         children: [
-          // Tab bar
           Container(
             color: Colors.white,
             child: TabBar(
@@ -77,7 +76,6 @@ class _ApplicationsScreenState extends ConsumerState<ApplicationsScreen>
                   .toList(),
             ),
           ),
-          // Tab content
           Expanded(
             child: TabBarView(
               controller: _tabController,

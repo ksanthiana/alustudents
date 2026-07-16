@@ -23,7 +23,6 @@ Future<void> main() async {
       }
     }
 
-    // Firebase emulator setup is intentionally disabled for this build.
   } catch (err) {
     debugPrint('FIREBASE INITIALIZATION ERROR: $err');
   }

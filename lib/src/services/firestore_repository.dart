@@ -60,7 +60,6 @@ class FirestoreRepository {
           final applications = snapshot.docs
               .map((doc) => Application.fromMap(doc.id, doc.data()))
               .toList();
-          // Sort by appliedAt descending (most recent first)
           applications.sort((a, b) => b.appliedAt.compareTo(a.appliedAt));
           return applications;
         });
