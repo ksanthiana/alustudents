@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/application.dart';
 import '../models/user_profile.dart';
 import '../state/app_providers.dart';
 import 'post_opportunity_screen.dart';
+
+Map<String, int> buildProfileStats(List<Application> applications) {
+  final stats = <String, int>{
+    'applications': 0,
+    'shortlisted': 0,
+    'accepted': 0,
+  };
+
+  for (final application in applications) {
+    final normalizedStatus = application.status.toLowerCase();
+    stats['applications'] = stats['applications']! + 1;
+
+    if (normalizedStatus == 'accepted') {
+      stats['accepted'] = stats['accepted']! + 1;
+    } else if (normalizedStatus == 'interview' || normalizedStatus == 'shortlisted') {
+      stats['shortlisted'] = stats['shortlisted']! + 1;
+    }
+  }
+
+  return stats;
+}
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -11,6 +33,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(userProfileProvider);
+    final applicationsAsync = ref.watch(myApplicationsProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7FB),
@@ -54,6 +77,15 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 );
               }
+
+              final stats = applicationsAsync.maybeWhen(
+                data: (applications) => buildProfileStats(applications),
+                orElse: () => const <String, int>{
+                  'applications': 0,
+                  'shortlisted': 0,
+                  'accepted': 0,
+                },
+              );
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,9 +144,9 @@ class ProfileScreen extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildStat('12', 'Applications'),
-                            _buildStat('6', 'Shortlisted'),
-                            _buildStat('3', 'Accepted'),
+                            _buildStat(stats['applications'].toString(), 'Applications'),
+                            _buildStat(stats['shortlisted'].toString(), 'Shortlisted'),
+                            _buildStat(stats['accepted'].toString(), 'Accepted'),
                           ],
                         ),
                       ],
